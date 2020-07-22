@@ -3,7 +3,9 @@
 
 #include <cstdlib>
 #include <iostream>
-#define CHESS_SIZE 64
+#define ROW 8
+#define COLUMN 8
+
 
 namespace chess_field {
 
@@ -13,13 +15,13 @@ namespace chess_field {
 			ChessField(); //Empty-argument constructor
 			~ChessField(); //Destructor
 
-			int* getChessArray() { return chessArray; }
+			int** getChessArray() { return chessArray; }
 			
 		private:
 			
 			//Field member
-			int* chessArray; 
-	}
+			int** chessArray; 
+	}; //class chess_field
 
 
 } //chess_field namespace

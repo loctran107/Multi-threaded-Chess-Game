@@ -7,8 +7,8 @@
 #include <iostream>
 #include "ChessField.h"
 
-#define WIDTH 597
-#define HEIGHT 600
+#define WIDTH 454
+#define HEIGHT 455
 namespace chess {
 	
 	class Chess {
@@ -16,13 +16,11 @@ namespace chess {
 			Chess() {} //constructor 
 			~Chess(); //destructor
 			void playChess(); //play the game
-			void drawPiece(int* const chessArray, Sprite spritePiece, RenderWindow gameWindow);
-			int getWidth() { return width_; }
-			int getHeight() { return height_; }
 		private:
-			//Field members
-			int width_ = WIDTH;
-			int height_ = HEIGHT;
+
+			//Private helper methods
+			//void drawPiece(int* const chessArray, Sprite spritePiece, RenderWindow gameWindow);
+			
 	}; //Chess class
 
 } //chess namespace
