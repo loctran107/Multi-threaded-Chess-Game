@@ -6,9 +6,14 @@
 #include <time.h>
 #include <iostream>
 #include "ChessField.h"
+#include "ChessPiece.h"
 
 #define WIDTH 454
 #define HEIGHT 455
+using namespace sf;
+using namespace chess_piece;
+using namespace chess_field;
+using namespace std;
 namespace chess {
 	
 	class Chess {
@@ -19,7 +24,10 @@ namespace chess {
 		private:
 
 			//Private helper methods
-			//void drawPiece(int* const chessArray, Sprite spritePiece, RenderWindow gameWindow);
+//			void drawChessBoard(RenderWindow gameWindow, ChessPiece* const chessPieceArray);
+
+			void loadChessBoard(int** const chessArray, ChessPiece* const chessPieceArray,
+					    const Texture& texturePiece);
 			
 	}; //Chess class
 

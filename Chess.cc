@@ -6,6 +6,8 @@
 using namespace sf;
 using namespace std;
 using namespace chess_field;
+using namespace chess_piece;
+
 namespace chess {
 
 	Chess::~Chess() {}
@@ -18,6 +20,13 @@ namespace chess {
 		//Load a sprite to display
 		Texture textureFrame, texturePiece;
 		
+		//Create a chess field to get chess matrix
+		ChessField chessField;
+		int** chessArray = chessField.getChessArray();
+
+		//Create an array of chess piece
+		ChessPiece* chessPieceArray = new ChessPiece[32];
+
 		//Check loading piece
 		if (!texturePiece.loadFromFile("images/figures.png")) {
 			cerr << "Failed to load the piece figures. Please try again." << endl;
@@ -30,31 +39,38 @@ namespace chess {
 			exit(EXIT_FAILURE);	
 		}
 		Sprite spriteFrame(textureFrame);
-		Sprite spritePiece(texturePiece);
-
-		//Create a chess field to get chess matrix
-		ChessField chessField;
-		int** chessArray = chessField.getChessArray();
-
+		loadChessBoard(chessArray, chessPieceArray, texturePiece);
 			
-//		spritePiece.setTextureRect(IntRect(168, 0, PIECE_SIZE, PIECE_SIZE));
 		bool isMove = false;
 		float dx = 0;
 	        float dy = 0;
 		while (gameWindow.isOpen()) {
 			
 			//Getting vector coordinate of the mouse relative to the created window
-			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
-				
+//			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
+			
+			//Convert vect coordinate to select the sprite
+/*			int x_coor = (int) (vect.x / PIECE_SIZE);
+			int y_coor = (int) (vect.y / PIECE_SIZE);
+			if (x_coor < ROW && y_coor < COLUMN) {
 
+				if (chessArray[x_coor][y_coor] > 0) {
+					spritePiece.setTextureRect(IntRect(PIECE_SIZE * (chessArray[x_coor][y_coor] - 1), 0,
+								   PIECE_SIZE, PIECE_SIZE));
+				} else {
+					spritePiece.setTextureRect(IntRect(PIECE_SIZE * (abs(chessArray[x_coor][y_coor]) - 1), 1, PIECE_SIZE, PIECE_SIZE));
+				}
+			}	*/	
+				
 			//Process the event
 			Event event;
 			while (gameWindow.pollEvent(event)) {
 				if (event.type == Event::Closed) {
 					gameWindow.close();
 				} 
-
-				if (event.type == Event::MouseButtonPressed) {
+				
+				/*<----Drag and drop---->*/
+			/*	if (event.type == Event::MouseButtonPressed) {
 					if (event.mouseButton.button == Mouse::Left) {
 						if (spritePiece.getGlobalBounds().contains(vect.x, vect.y)) {
 							isMove = true;
@@ -69,37 +85,53 @@ namespace chess {
 					if (event.mouseButton.button == Mouse::Left) {
 						isMove = false;
 					}
-					
-				}
+				}*/
 			}
 			
-			if (isMove) {
-	//		        cout << dx << ", " << dy << endl;
-	//		        
-			//	spritePiece.setPosition(vect.x - dx, vect.y - dy);
-			}
+		/*	if (isMove) { 
+				spritePiece.setPosition(vect.x - dx, vect.y - dy);
+			}*/
+			
 			gameWindow.clear();
 			gameWindow.draw(spriteFrame);
-			
-			for (int i = 0; i < ROW; ++i) {
-				for (int j = 0; j < COLUMN; ++j) { 
-					
-					if (chessArray[i][j] > 0) { //YELLOW PIECE
-						spritePiece.setTextureRect(IntRect(PIECE_SIZE * (chessArray[i][j] - 1), 0,
-									   PIECE_SIZE, PIECE_SIZE));
-					} else if (chessArray[i][j] < 0) { //WHITE PIECE
-						spritePiece.setTextureRect(IntRect(PIECE_SIZE * (abs(chessArray[i][j]) - 1), PIECE_SIZE,
-									   PIECE_SIZE, PIECE_SIZE));
-					} else {
-						continue;
-					}
-					spritePiece.setPosition(PIECE_SIZE * j, PIECE_SIZE * i);
-					gameWindow.draw(spritePiece);
-				}
-
-			}	
+		
+			//Draw the chess board
+			for (int i = 0; i < 32; ++i) {
+				gameWindow.draw((chessPieceArray+i)->getSprite());
+			}
 			gameWindow.display();
 		
 		}	
+
 	}	
+
+	void Chess::loadChessBoard(int** const chessArray, ChessPiece* const chessPieceArray,
+			           const Texture& texturePiece) {
+		int i, j, k;
+		k = 0;
+		Sprite dummy(texturePiece);
+		for (i = 0; i < ROW; ++i) {
+			for (j = 0; j < COLUMN; ++j) {
+				if (chessArray[i][j] > 0) {
+					dummy.setTextureRect(IntRect(PIECE_SIZE * (chessArray[i][j] - 1), 0,
+							     PIECE_SIZE, PIECE_SIZE));
+				} else if (chessArray[i][j] < 0) {
+					dummy.setTextureRect(IntRect(PIECE_SIZE * ((abs(chessArray[i][j]) - 1)), 1,
+							     PIECE_SIZE, PIECE_SIZE));
+				} else {
+					continue;
+				}
+				
+				dummy.setPosition(PIECE_SIZE * j, PIECE_SIZE * i);
+
+				(chessPieceArray+(k*ROW+j))->setSprite(dummy);
+				
+				//Update k when j reaches COLUMN	
+				if (j == COLUMN - 1) {
+					++k;
+				}
+			}
+			
+		}		
+	}
 }
