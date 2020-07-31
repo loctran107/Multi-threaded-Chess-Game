@@ -118,16 +118,9 @@ namespace chess {
 			for (j = 0; j < COLUMN; ++j) {
 
 				//Try shorten this statement later
-			/*	if (chessArray[i][j] != 0) {
-					dummy.setTexturerect(IntRect(PIECE_SIZE * (abs(chessArray[i][j]) - 1), 
-							     (chessArray[i][j] > 0 ? 0 : 1), PIECE_SIZE, PIECE_SIZE));
-				}*/
-				if (chessArray[i][j] > 0) {
-					dummy.setTextureRect(IntRect(PIECE_SIZE * (chessArray[i][j] - 1), 0,
-							     PIECE_SIZE, PIECE_SIZE));
-				} else if (chessArray[i][j] < 0) {
-					dummy.setTextureRect(IntRect(PIECE_SIZE * ((abs(chessArray[i][j]) - 1)), 56,
-							     PIECE_SIZE, PIECE_SIZE));
+				if (chessArray[i][j] != 0) {
+					dummy.setTextureRect(IntRect(PIECE_SIZE * (abs(chessArray[i][j]) - 1), 
+							     (chessArray[i][j] > 0 ? 0 : PIECE_SIZE), PIECE_SIZE, PIECE_SIZE));
 				} else {
 					continue;
 				}
