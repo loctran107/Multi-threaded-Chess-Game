@@ -5,8 +5,15 @@
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
+#include <iterator>
 #include "ChessField.h"
 #include "ChessPiece.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "King.h"
+#include "Pawn.h"
 
 #define WIDTH 454
 #define HEIGHT 455
@@ -26,7 +33,7 @@ namespace chess {
 			//Private helper methods
 //			void drawChessBoard(RenderWindow gameWindow, ChessPiece* const chessPieceArray);
 
-			void loadChessBoard(int** const chessArray, ChessPiece* const chessPieceArray,
+			void loadChessBoard(int** const chessArray, ChessPiece& chessPiece,
 					    const Texture& texturePiece);
 			
 	}; //Chess class

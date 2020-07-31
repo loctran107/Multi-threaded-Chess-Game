@@ -25,7 +25,7 @@ namespace chess {
 		int** chessArray = chessField.getChessArray();
 
 		//Create an array of chess piece
-		ChessPiece* chessPieceArray = new ChessPiece[32];
+		ChessPiece chessPiece;
 
 		//Check loading piece
 		if (!texturePiece.loadFromFile("images/figures.png")) {
@@ -39,15 +39,15 @@ namespace chess {
 			exit(EXIT_FAILURE);	
 		}
 		Sprite spriteFrame(textureFrame);
-		loadChessBoard(chessArray, chessPieceArray, texturePiece);
-			
+		loadChessBoard(chessArray, chessPiece, texturePiece);
+	///	chessPiece.printChessMap();
 		bool isMove = false;
 		float dx = 0;
 	        float dy = 0;
 		while (gameWindow.isOpen()) {
 			
 			//Getting vector coordinate of the mouse relative to the created window
-//			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
+			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
 			
 			//Convert vect coordinate to select the sprite
 /*			int x_coor = (int) (vect.x / PIECE_SIZE);
@@ -94,10 +94,12 @@ namespace chess {
 			
 			gameWindow.clear();
 			gameWindow.draw(spriteFrame);
-		
+	
+				
 			//Draw the chess board
-			for (int i = 0; i < 32; ++i) {
-				gameWindow.draw((chessPieceArray+i)->getSprite());
+			map<int, ChessPiece*> mp = chessPiece.getMap();
+			for (auto itr = mp.begin(); itr != mp.end(); ++itr) {
+				gameWindow.draw((itr->second)->getSprite());
 			}
 			gameWindow.display();
 		
@@ -105,33 +107,62 @@ namespace chess {
 
 	}	
 
-	void Chess::loadChessBoard(int** const chessArray, ChessPiece* const chessPieceArray,
+	void Chess::loadChessBoard(int** const chessArray, ChessPiece& chessPiece,
 			           const Texture& texturePiece) {
-		int i, j, k;
-		k = 0;
+		int i, j;
+		int key;
+		String color;
 		Sprite dummy(texturePiece);
+		map<int, ChessPiece*> mp;
 		for (i = 0; i < ROW; ++i) {
 			for (j = 0; j < COLUMN; ++j) {
+
+				//Try shorten this statement later
+			/*	if (chessArray[i][j] != 0) {
+					dummy.setTexturerect(IntRect(PIECE_SIZE * (abs(chessArray[i][j]) - 1), 
+							     (chessArray[i][j] > 0 ? 0 : 1), PIECE_SIZE, PIECE_SIZE));
+				}*/
 				if (chessArray[i][j] > 0) {
 					dummy.setTextureRect(IntRect(PIECE_SIZE * (chessArray[i][j] - 1), 0,
 							     PIECE_SIZE, PIECE_SIZE));
 				} else if (chessArray[i][j] < 0) {
-					dummy.setTextureRect(IntRect(PIECE_SIZE * ((abs(chessArray[i][j]) - 1)), 1,
+					dummy.setTextureRect(IntRect(PIECE_SIZE * ((abs(chessArray[i][j]) - 1)), 56,
 							     PIECE_SIZE, PIECE_SIZE));
 				} else {
 					continue;
 				}
 				
 				dummy.setPosition(PIECE_SIZE * j, PIECE_SIZE * i);
-
-				(chessPieceArray+(k*ROW+j))->setSprite(dummy);
-				
-				//Update k when j reaches COLUMN	
-				if (j == COLUMN - 1) {
-					++k;
-				}
+			
+				key = i * ROW + j; //Key to map the object
+				color = (chessArray[i][j] > 0) ? "YELLOW" : "WHITE";
+				switch (abs(chessArray[i][j])) {
+					case 1:
+						mp.insert(make_pair(key, new rook::Rook(color, dummy)));
+						break;
+					case 2:
+						mp.insert(make_pair(key, new knight::Knight(color, dummy)));
+						break;
+					case 3:
+						mp.insert(make_pair(key, new bishop::Bishop(color, dummy)));
+						break;
+					case 4:
+						mp.insert(make_pair(key, new queen::Queen(color, dummy)));
+						break;
+					case 5:
+						mp.insert(make_pair(key, new king::King(color, dummy)));
+						break;
+					case 6:
+						mp.insert(make_pair(key, new pawn::Pawn(color, dummy)));
+						break;
+					default:
+						break;
+				}	
 			}
 			
-		}		
+			
+		}
+		chessPiece.setMap(mp);
+	//	chessPiece.printChessMap(); //Replace this with test macro later
 	}
 }

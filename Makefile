@@ -17,7 +17,7 @@ ChessAdmin.o: ChessAdmin.cc ChessAdmin.h
 Chess.o: Chess.cc Chess.h
 	$(GXX) $(CXXFLAGS) -o $@ -c $<
 
-ChessField.o: ChessField.cc ChessField.h
+ChessField.o: ChessField.cc ChessField.h Rook.h Knight.h Bishop.h Queen.h King.h
 	$(GXX) $(CXXFLAGS) -o $@ -c $<
 
 ChessPiece.o: ChessPiece.cc ChessPiece.h
