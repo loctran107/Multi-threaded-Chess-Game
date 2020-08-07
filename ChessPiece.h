@@ -14,11 +14,6 @@ namespace chess_piece {
 			virtual void setSprite(Sprite sprite) = 0; //{ this->sprite_ = sprite; } //Sprite mutator
 
 	};
-
-	ChessPiece::~ChessPiece() {
-		cout << "Finish deallocation" << endl;
-	}
-
 }
 
 #endif //_CHESSPIECE_H_

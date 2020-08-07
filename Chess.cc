@@ -23,10 +23,6 @@ namespace chess {
 		
 		//Create a chess field to get chess matrix
 		ChessField chessField;
-	//	int** chessArray = chessField.getChessArray();
-
-		//Create an array of chess piece
-//		ChessPiece chessPddiece;
 
 		//Check loading piece
 		if (!texturePiece.loadFromFile("images/figures.png")) {
@@ -42,13 +38,13 @@ namespace chess {
 		Sprite spriteFrame(textureFrame);
 		loadChessBoard(chessField, texturePiece);
 		//map<int, ChessPiece*> mp = chessPiece->getMap();
-		bool isMove = false;
-		float dx = 0;
-	        float dy = 0;
+//		bool isMove = false;
+//		float dx = 0;
+//	        float dy = 0;
 		while (gameWindow.isOpen()) {
 			
 			//Getting vector coordinate of the mouse relative to the created window
-			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
+//			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
 	/*		Sprite movePiece;
 			//Convert vect coordinate to select the sprite
 			int x_coor = (int) (vect.x / PIECE_SIZE);
