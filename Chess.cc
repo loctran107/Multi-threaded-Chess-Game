@@ -3,6 +3,7 @@
 #define CHESS_SIZE 64
 #define ROW 8
 #define COLUMN 8
+#define CONVERT(i, j) ((i) * ROW + (j))
 using namespace sf;
 using namespace std;
 using namespace chess_field;
@@ -22,10 +23,10 @@ namespace chess {
 		
 		//Create a chess field to get chess matrix
 		ChessField chessField;
-		int** chessArray = chessField.getChessArray();
+	//	int** chessArray = chessField.getChessArray();
 
 		//Create an array of chess piece
-		ChessPiece chessPiece;
+//		ChessPiece chessPddiece;
 
 		//Check loading piece
 		if (!texturePiece.loadFromFile("images/figures.png")) {
@@ -39,8 +40,8 @@ namespace chess {
 			exit(EXIT_FAILURE);	
 		}
 		Sprite spriteFrame(textureFrame);
-		loadChessBoard(chessArray, chessPiece, texturePiece);
-	///	chessPiece.printChessMap();
+		loadChessBoard(chessField, texturePiece);
+		//map<int, ChessPiece*> mp = chessPiece->getMap();
 		bool isMove = false;
 		float dx = 0;
 	        float dy = 0;
@@ -48,19 +49,20 @@ namespace chess {
 			
 			//Getting vector coordinate of the mouse relative to the created window
 			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
-			
+	/*		Sprite movePiece;
 			//Convert vect coordinate to select the sprite
-/*			int x_coor = (int) (vect.x / PIECE_SIZE);
+			int x_coor = (int) (vect.x / PIECE_SIZE);
 			int y_coor = (int) (vect.y / PIECE_SIZE);
+			int key;
 			if (x_coor < ROW && y_coor < COLUMN) {
-
-				if (chessArray[x_coor][y_coor] > 0) {
-					spritePiece.setTextureRect(IntRect(PIECE_SIZE * (chessArray[x_coor][y_coor] - 1), 0,
-								   PIECE_SIZE, PIECE_SIZE));
+				
+				key = CONVERT(x_coor, y_coor);
+				if (mp.find(key) == mp.end()) {
+					continue;
 				} else {
-					spritePiece.setTextureRect(IntRect(PIECE_SIZE * (abs(chessArray[x_coor][y_coor]) - 1), 1, PIECE_SIZE, PIECE_SIZE));
+					movePiece = mp[key]->getSprite();
 				}
-			}	*/	
+			}		*/
 				
 			//Process the event
 			Event event;
@@ -72,10 +74,10 @@ namespace chess {
 				/*<----Drag and drop---->*/
 			/*	if (event.type == Event::MouseButtonPressed) {
 					if (event.mouseButton.button == Mouse::Left) {
-						if (spritePiece.getGlobalBounds().contains(vect.x, vect.y)) {
+						if (movePiece.getGlobalBounds().contains(vect.x, vect.y)) {
 							isMove = true;
-							dx = vect.x - spritePiece.getPosition().x;
-							dy = vect.y - spritePiece.getPosition().y;				
+							dx = vect.x - movePiece.getPosition().x;
+							dy = vect.y - movePiece.getPosition().y;				
 						}
 
 					}
@@ -88,16 +90,19 @@ namespace chess {
 				}*/
 			}
 			
-		/*	if (isMove) { 
-				spritePiece.setPosition(vect.x - dx, vect.y - dy);
-			}*/
+	/*		if (isMove) {
+			    //    cout << "I'm here" << endl;	
+				movePiece.setPosition(vect.x - dx, vect.y - dy);
+				mp[key]->setSprite(movePiece);
+			}*/	
+			
 			
 			gameWindow.clear();
 			gameWindow.draw(spriteFrame);
 	
 				
 			//Draw the chess board
-			map<int, ChessPiece*> mp = chessPiece.getMap();
+			map<int, ChessPiece*> mp = chessField.getMap();
 			for (auto itr = mp.begin(); itr != mp.end(); ++itr) {
 				gameWindow.draw((itr->second)->getSprite());
 			}
@@ -107,12 +112,12 @@ namespace chess {
 
 	}	
 
-	void Chess::loadChessBoard(int** const chessArray, ChessPiece& chessPiece,
-			           const Texture& texturePiece) {
+	void Chess::loadChessBoard(ChessField& chessField, const Texture& texturePiece) {
 		int i, j;
 		int key;
 		String color;
 		Sprite dummy(texturePiece);
+		int** chessArray = chessField.getChessArray();
 		map<int, ChessPiece*> mp;
 		for (i = 0; i < ROW; ++i) {
 			for (j = 0; j < COLUMN; ++j) {
@@ -127,7 +132,7 @@ namespace chess {
 				
 				dummy.setPosition(PIECE_SIZE * j, PIECE_SIZE * i);
 			
-				key = i * ROW + j; //Key to map the object
+				key = CONVERT(i, j); //Key to map the object
 				color = (chessArray[i][j] > 0) ? "YELLOW" : "WHITE";
 				switch (abs(chessArray[i][j])) {
 					case 1:
@@ -152,10 +157,12 @@ namespace chess {
 						break;
 				}	
 			}
-			
-			
 		}
-		chessPiece.setMap(mp);
-	//	chessPiece.printChessMap(); //Replace this with test macro later
-	}
+		chessField.setMap(mp);
+
+		//Compiler control directives for testing
+		#ifdef TEST
+		chessField.printChessMap(); 
+		#endif
+	}	
 }

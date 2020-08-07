@@ -31,7 +31,7 @@ int main() {
 	//std::map<std::string, std::unique_ptr<animal>> m;
 	m.insert(std::make_pair("stupid_dog_name", new dog()));
 	m.insert(std::make_pair("stupid_bird_name", new bird()));
-	m["stupid_dog_name"]->make_sound();
+	m["stupid_cat_name"]->make_sound();
 
 	//std::map<std::string, std::unique_ptr<animal>>::iterator itr;//
 	//New keyword: auto. As its name suggest, it automatically deduce the d

@@ -3,10 +3,12 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <map>
+#include "ChessPiece.h"
 #define ROW 8
 #define COLUMN 8
 
-
+using namespace chess_piece;
 namespace chess_field {
 
 	class ChessField {
@@ -16,11 +18,15 @@ namespace chess_field {
 			~ChessField(); //Destructor
 
 			int** getChessArray() { return chessArray; }
-			
+			map<int, ChessPiece*> getMap() const { return this->chessMap_; }
+			void setMap(map<int, ChessPiece*> chessMap); //map mutator
+			void printChessMap() const;
+
 		private:
 			
 			//Field member
-			int** chessArray; 
+			int** chessArray;
+			map<int, ChessPiece*> chessMap_;	         	
 	}; //class chess_field
 
 

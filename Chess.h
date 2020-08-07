@@ -17,6 +17,7 @@
 
 #define WIDTH 454
 #define HEIGHT 455
+//#define TEST 1
 using namespace sf;
 using namespace chess_piece;
 using namespace chess_field;
@@ -33,8 +34,7 @@ namespace chess {
 			//Private helper methods
 //			void drawChessBoard(RenderWindow gameWindow, ChessPiece* const chessPieceArray);
 
-			void loadChessBoard(int** const chessArray, ChessPiece& chessPiece,
-					    const Texture& texturePiece);
+			void loadChessBoard(ChessField& chessField, const Texture& texturePiece);
 			
 	}; //Chess class
 

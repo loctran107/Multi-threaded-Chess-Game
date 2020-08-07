@@ -11,10 +11,11 @@ namespace rook {
 		public:	
 			//Constructor
 			Rook(string color, Sprite sprite) : color_{color}, sprite_{sprite} {}
-			~Rook();
+			~Rook() {}
 
 			string getColor() { return color_; } //color accessor
-			Sprite getSprite() { return sprite_; } //sprite accessor
+			Sprite getSprite() const override { return sprite_; } //sprite accessor
+			void setSprite(Sprite sprite) override { this->sprite_ = sprite; } 
 
 
 		private:

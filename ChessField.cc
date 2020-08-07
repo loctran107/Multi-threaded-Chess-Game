@@ -1,7 +1,24 @@
 #include "ChessField.h"
-
+using namespace chess_piece;
 namespace chess_field {
-	
+
+	void ChessField::setMap(map<int, ChessPiece*> chessMap) {
+		this->chessMap_ = chessMap;	
+	}	
+
+	void ChessField::printChessMap() const {
+		for (auto itr = this->chessMap_.begin(); itr != this->chessMap_.end(); ++itr) {
+			ChessPiece* piece = itr->second;
+			Sprite dummy = piece->getSprite();
+			IntRect d = dummy.getTextureRect();
+			Vector2f vect = dummy.getPosition();
+			cout << itr->first << " " << vect.x << " " << vect.y << endl;
+			cout << d.left << " " << d.top << endl;
+			cout << endl;
+		}
+
+	}
+
 	ChessField::ChessField() {
 		//Dynamically allocate within memory
 		//1. YELLOW ROOK     -1. WHITE ROOK
@@ -72,5 +89,10 @@ namespace chess_field {
 			delete[] chessArray[i];
 		}
 		delete[] chessArray;
+
+		//deallocating the chess map
+		for (auto itr = this->chessMap_.begin(); itr != this->chessMap_.end(); ++itr) {
+			delete itr->second;
+		}
 	}
 }
