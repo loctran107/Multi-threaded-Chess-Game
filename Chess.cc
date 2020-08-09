@@ -19,7 +19,7 @@ namespace chess {
 		RenderWindow gameWindow(VideoMode(WIDTH, HEIGHT), "Chess game");
 		
 		//Load a sprite to display
-		Texture textureFrame, texturePiece;
+		Texture textureFrame, texturePiece, textureMove;
 		
 		//Create a chess field to get chess matrix
 		ChessField chessField;
@@ -35,70 +35,77 @@ namespace chess {
 			cerr << "Failed to load the image. Please try again." << endl;
 			exit(EXIT_FAILURE);	
 		}
+
+		//Check texture movement
+		if (!textureMove.loadFromFile("images/moveSquare.png")) {
+			cerr << "Failed to load the image square. Please try again." << endl;
+			exit(EXIT_FAILURE);
+		}
+
 		Sprite spriteFrame(textureFrame);
+		Sprite spriteMove(textureMove);
+
+		//Load the chess pieces on the board
 		loadChessBoard(chessField, texturePiece);
-		//map<int, ChessPiece*> mp = chessPiece->getMap();
-//		bool isMove = false;
-//		float dx = 0;
-//	        float dy = 0;
+		map<int, ChessPiece*> mp = chessField.getMap();
+		bool isMove = false;
 		while (gameWindow.isOpen()) {
 			
+				
 			//Getting vector coordinate of the mouse relative to the created window
-//			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
-	/*		Sprite movePiece;
+			Vector2i vect = Mouse::getPosition(gameWindow); //see SFML documentation
+			Sprite movePiece;
 			//Convert vect coordinate to select the sprite
 			int x_coor = (int) (vect.x / PIECE_SIZE);
 			int y_coor = (int) (vect.y / PIECE_SIZE);
 			int key;
-			if (x_coor < ROW && y_coor < COLUMN) {
-				
-				key = CONVERT(x_coor, y_coor);
+			if (x_coor < COLUMN && y_coor < ROW) {	
+				key = CONVERT(y_coor, x_coor);
 				if (mp.find(key) == mp.end()) {
 					continue;
 				} else {
+				//	isEmpty = false;
 					movePiece = mp[key]->getSprite();
 				}
-			}		*/
-				
+			}	
+
+			if (Mouse::isButtonPressed(Mouse::Left)) {
+				if (movePiece.getGlobalBounds().contains(vect.x, vect.y)) {
+						spriteMove.setPosition(PIECE_SIZE * x_coor + 1, PIECE_SIZE * y_coor + 3);
+				//		isMove = !isMove;		
+				}
+			} 
+
 			//Process the event
 			Event event;
 			while (gameWindow.pollEvent(event)) {
 				if (event.type == Event::Closed) {
 					gameWindow.close();
 				} 
-				
-				/*<----Drag and drop---->*/
-			/*	if (event.type == Event::MouseButtonPressed) {
-					if (event.mouseButton.button == Mouse::Left) {
-						if (movePiece.getGlobalBounds().contains(vect.x, vect.y)) {
-							isMove = true;
-							dx = vect.x - movePiece.getPosition().x;
-							dy = vect.y - movePiece.getPosition().y;				
+
+			/*	if (event.type == Event::MouseButtonPressed && isMove) {
+					if (event.key.code == Mouse::Left) {
+						if (!movePiece.getGlobalBounds().contains(vect.x, vect.y)) {
+							movePiece.setPosition(
 						}
-
-					}
-				}
-
-				if (event.type == Event::MouseButtonReleased) {
-					if (event.mouseButton.button == Mouse::Left) {
-						isMove = false;
 					}
 				}*/
-			}
-			
-	/*		if (isMove) {
-			    //    cout << "I'm here" << endl;	
-				movePiece.setPosition(vect.x - dx, vect.y - dy);
-				mp[key]->setSprite(movePiece);
-			}*/	
-			
-			
+				if (event.type == Event::MouseButtonReleased) {
+					if (event.key.code == Mouse::Left) {
+						isMove = !isMove;
+					}
+				}
+			}	
+				
 			gameWindow.clear();
 			gameWindow.draw(spriteFrame);
-	
-				
+
+			if (isMove) {
+				gameWindow.draw(spriteMove);
+			}
+					
 			//Draw the chess board
-			map<int, ChessPiece*> mp = chessField.getMap();
+//			map<int, ChessPiece*> mp = chessField.getMap();
 			for (auto itr = mp.begin(); itr != mp.end(); ++itr) {
 				gameWindow.draw((itr->second)->getSprite());
 			}
@@ -160,5 +167,7 @@ namespace chess {
 		#ifdef TEST
 		chessField.printChessMap(); 
 		#endif
+
+		//Consider deleting chessArray here
 	}	
 }
